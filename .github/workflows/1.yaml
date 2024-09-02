@@ -23,29 +23,45 @@ jobs:
         run: cargo build --verbose
       - name: Run tests
         run: cargo test --verbose
-      - name: Run Trivy vulnerability scanner in fs mode
+      - name: Run Trivy vulnerability scanner in fs mod
         uses: aquasecurity/trivy-action@0.20.0
         with:
           scan-type: 'fs'
           scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-files.sarif'
           trivy-config: trivy.yaml
+      - name: Upload SARIF results as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: trivy-fileresult
+          path: trivy-files.sarif
+      
       - name: docker login1
         uses: docker/login-action@v3
         with:
           username: ${{secrets.docker_username}}
           password: ${{secrets.docker_password}}
+      
+      - name: bulding and pushing the docker image to the dockerr GitHub
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          tags: ${{secrets.docker_username}}/mohanrust1:1.0
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.20.0
         with:
           image-ref: 'docker.io/${{secrets.docker_username}}/mohanrust:1.0'
           format: 'sarif'
+          template: '@/contrib/sarif.tpl'
           output: 'trivy-results.sarif'
-      - name: bulding and pushing the docker image to the dockerr GitHub
-        uses: docker/build-push-action@v5
+      
+      - name: Upload SARIF results as artifact
+        uses: actions/upload-artifact@v3
         with:
-          context: .
-          push: true
-          tags: ${{secrets.docker_username}}/mohanrust1:1.0
+          name: trivy-results
+          path: trivy-results.sarif
 
       
 
