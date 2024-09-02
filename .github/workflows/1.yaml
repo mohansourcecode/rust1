@@ -29,7 +29,11 @@ jobs:
           scan-type: 'fs'
           scan-ref: '.'
           trivy-config: trivy.yaml
-      
+      - name: docker login1
+        uses: docker/login-action@v3
+        with:
+          username: ${{secrets.docker_username}}
+          password: ${{secrets.docker_password}}
 
 
 
