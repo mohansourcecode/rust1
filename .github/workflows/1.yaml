@@ -38,7 +38,8 @@ jobs:
         uses: aquasecurity/trivy-action@0.20.0
         with:
           image-ref: 'docker.io/${{secrets.docker_username}}/mohanrust:1.0'
-
+          format: 'sarif'
+          output: 'trivy-results.sarif'
       - name: bulding and pushing the docker image to the dockerr GitHub
         uses: docker/build-push-action@v5
         with:
