@@ -9,11 +9,14 @@ on:
       - main
 
 jobs:
-  test:
-    name: cargo test
+  build:
     runs-on: ubuntu-latest
+    
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
-     
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Set up Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+
       
