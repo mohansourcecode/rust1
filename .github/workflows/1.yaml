@@ -41,6 +41,10 @@ jobs:
           push: true
           tags: ${{secrets.docker_username}}/mohanrust1:1.0
 
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: 'docker.io/${{secrets.docker_username}}/mohanrust:1.0'
 
 
 
