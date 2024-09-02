@@ -1,25 +1,34 @@
-name: Performing Rust Project Checkout
+name: Rust
 
-on: 
+on:
   push:
     branches:
-      - main  # Specify branches to trigger the workflow, if needed
-
-env:
-  CARGO_TERM_COLOR: always
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  rust-project:
+  build:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
         
       - name: Set up Rust
         uses: actions/setup-rust@v2
         with:
-          rust-version: '1.72.0'
-          
+          rust-version: '1.72.0'  # Specify the Rust version you need
+
       - name: Build
         run: cargo build --verbose
+        
+      - name: Run tests
+        run: cargo test --verbose
+        
+      - name: Run Clippy
+        run: cargo clippy --verbose
+        
+      - name: Check formatting
+        run: cargo fmt -- --check
